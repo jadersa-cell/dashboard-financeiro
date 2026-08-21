@@ -114,8 +114,11 @@
   .cat-bar-value { width: 90px; text-align: right; font-size: 0.8rem; color: var(--text-dim); flex-shrink: 0; }
   .chart-wrap { position: relative; height: 260px; }
   .two-col { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
+  .three-col { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 14px; align-items: start; }
+  @media (max-width: 1000px) { .three-col { grid-template-columns: 1fr 1fr; } }
   @media (max-width: 760px) {
     .two-col { grid-template-columns: 1fr; }
+    .three-col { grid-template-columns: 1fr; }
   }
   .proj-row { display:flex; justify-content: space-between; padding: 10px 0; border-bottom: 1px solid var(--card-border); }
   .proj-row:last-child { border-bottom: none; }
@@ -417,12 +420,11 @@
   </div>
 </div>
 
-<div class="section card">
-  <h2>Evolução mensal de gastos</h2>
-  <div class="chart-wrap"><canvas id="chartEvolucao"></canvas></div>
-</div>
-
-<div class="section two-col">
+<div class="section three-col">
+  <div class="card">
+    <h2>Evolução mensal de gastos</h2>
+    <div class="chart-wrap"><canvas id="chartEvolucao"></canvas></div>
+  </div>
   <div class="card">
     <h2 id="tituloCatBars">Gasto por categoria — mês selecionado</h2>
     <div id="catBars"></div>
@@ -433,34 +435,33 @@
   </div>
 </div>
 
-<div class="section card">
-  <div class="app-header-row" style="margin-bottom:10px;">
-    <h2 style="margin:0;">Parcelas ativas</h2>
-    <input type="text" id="buscaParcelas" class="search-input" style="max-width:240px; flex:none;" placeholder="Buscar parcela...">
-  </div>
-  <div class="two-col" style="margin-bottom:16px;">
-    <div>
-      <div class="table-scroll">
-      <table>
-        <thead><tr><th>Descrição</th><th>Categoria</th><th>Parcela</th><th>Valor</th><th>Termina em</th></tr></thead>
-        <tbody id="tabelaParcelas"></tbody>
-      </table>
-      </div>
+<div class="section three-col">
+  <div class="card">
+    <div class="app-header-row" style="margin-bottom:10px;">
+      <h2 style="margin:0;">Parcelas ativas</h2>
+      <input type="text" id="buscaParcelas" class="search-input" style="max-width:150px; flex:none;" placeholder="Buscar parcela...">
     </div>
-    <div>
-      <h2 style="font-size:0.95rem;">Projeção de liberação de orçamento (próximos 3 meses)</h2>
-      <div id="projecaoParcelas"></div>
-      <div class="small-note">Valor que deixa de ser cobrado porque a parcela termina.</div>
+    <div class="table-scroll">
+    <table>
+      <thead><tr><th>Descrição</th><th>Categoria</th><th>Parcela</th><th>Valor</th><th>Termina em</th></tr></thead>
+      <tbody id="tabelaParcelas"></tbody>
+    </table>
     </div>
   </div>
-</div>
-
-<div class="section card">
-  <h2>Assinaturas e gastos fixos recorrentes</h2>
-  <table>
-    <thead><tr><th>Descrição</th><th>Categoria</th><th>Tipo</th><th>Meses presentes</th><th>Valor médio</th><th>Faixa</th></tr></thead>
-    <tbody id="tabelaRecorrentes"></tbody>
-  </table>
+  <div class="card">
+    <h2 style="font-size:0.95rem;">Projeção de liberação de orçamento (próximos 3 meses)</h2>
+    <div id="projecaoParcelas"></div>
+    <div class="small-note">Valor que deixa de ser cobrado porque a parcela termina.</div>
+  </div>
+  <div class="card">
+    <h2>Assinaturas e gastos fixos recorrentes</h2>
+    <div class="table-scroll">
+    <table>
+      <thead><tr><th>Descrição</th><th>Categoria</th><th>Tipo</th><th>Meses presentes</th><th>Valor médio</th><th>Faixa</th></tr></thead>
+      <tbody id="tabelaRecorrentes"></tbody>
+    </table>
+    </div>
+  </div>
 </div>
 
 <div class="section card">
@@ -562,12 +563,11 @@
   </div>
 </div>
 
-<div class="section card">
-  <h2>Evolução mensal de gastos</h2>
-  <div class="chart-wrap"><canvas id="br_chartEvolucao"></canvas></div>
-</div>
-
-<div class="section two-col">
+<div class="section three-col">
+  <div class="card">
+    <h2>Evolução mensal de gastos</h2>
+    <div class="chart-wrap"><canvas id="br_chartEvolucao"></canvas></div>
+  </div>
   <div class="card">
     <h2 id="br_tituloCatBars">Gasto por categoria — mês selecionado</h2>
     <div id="br_catBars"></div>
@@ -578,34 +578,33 @@
   </div>
 </div>
 
-<div class="section card">
-  <div class="app-header-row" style="margin-bottom:10px;">
-    <h2 style="margin:0;">Parcelas ativas</h2>
-    <input type="text" id="br_buscaParcelas" class="search-input" style="max-width:240px; flex:none;" placeholder="Buscar parcela...">
-  </div>
-  <div class="two-col" style="margin-bottom:16px;">
-    <div>
-      <div class="table-scroll">
-      <table>
-        <thead><tr><th>Descrição</th><th>Categoria</th><th>Parcela</th><th>Valor</th><th>Termina em</th></tr></thead>
-        <tbody id="br_tabelaParcelas"></tbody>
-      </table>
-      </div>
+<div class="section three-col">
+  <div class="card">
+    <div class="app-header-row" style="margin-bottom:10px;">
+      <h2 style="margin:0;">Parcelas ativas</h2>
+      <input type="text" id="br_buscaParcelas" class="search-input" style="max-width:150px; flex:none;" placeholder="Buscar parcela...">
     </div>
-    <div>
-      <h2 style="font-size:0.95rem;">Projeção de liberação de orçamento (próximos 3 meses)</h2>
-      <div id="br_projecaoParcelas"></div>
-      <div class="small-note">Valor que deixa de ser cobrado porque a parcela termina.</div>
+    <div class="table-scroll">
+    <table>
+      <thead><tr><th>Descrição</th><th>Categoria</th><th>Parcela</th><th>Valor</th><th>Termina em</th></tr></thead>
+      <tbody id="br_tabelaParcelas"></tbody>
+    </table>
     </div>
   </div>
-</div>
-
-<div class="section card">
-  <h2>Assinaturas e gastos fixos recorrentes</h2>
-  <table>
-    <thead><tr><th>Descrição</th><th>Categoria</th><th>Tipo</th><th>Meses presentes</th><th>Valor médio</th><th>Faixa</th></tr></thead>
-    <tbody id="br_tabelaRecorrentes"></tbody>
-  </table>
+  <div class="card">
+    <h2 style="font-size:0.95rem;">Projeção de liberação de orçamento (próximos 3 meses)</h2>
+    <div id="br_projecaoParcelas"></div>
+    <div class="small-note">Valor que deixa de ser cobrado porque a parcela termina.</div>
+  </div>
+  <div class="card">
+    <h2>Assinaturas e gastos fixos recorrentes</h2>
+    <div class="table-scroll">
+    <table>
+      <thead><tr><th>Descrição</th><th>Categoria</th><th>Tipo</th><th>Meses presentes</th><th>Valor médio</th><th>Faixa</th></tr></thead>
+      <tbody id="br_tabelaRecorrentes"></tbody>
+    </table>
+    </div>
+  </div>
 </div>
 
 <div class="section card">
@@ -707,12 +706,11 @@
   </div>
 </div>
 
-<div class="section card">
-  <h2>Evolução mensal de gastos</h2>
-  <div class="chart-wrap"><canvas id="co_chartEvolucao"></canvas></div>
-</div>
-
-<div class="section two-col">
+<div class="section three-col">
+  <div class="card">
+    <h2>Evolução mensal de gastos</h2>
+    <div class="chart-wrap"><canvas id="co_chartEvolucao"></canvas></div>
+  </div>
   <div class="card">
     <h2 id="co_tituloCatBars">Gasto por categoria — mês selecionado</h2>
     <div id="co_catBars"></div>
@@ -729,34 +727,33 @@
   <div class="small-note">Colunas empilhadas por categoria (Ourocard + Bradesco juntos). Clique num segmento para abrir o detalhamento daquela categoria.</div>
 </div>
 
-<div class="section card">
-  <div class="app-header-row" style="margin-bottom:10px;">
-    <h2 style="margin:0;">Parcelas ativas</h2>
-    <input type="text" id="co_buscaParcelas" class="search-input" style="max-width:240px; flex:none;" placeholder="Buscar parcela...">
-  </div>
-  <div class="two-col" style="margin-bottom:16px;">
-    <div>
-      <div class="table-scroll">
-      <table>
-        <thead><tr><th>Descrição</th><th>Categoria</th><th>Parcela</th><th>Valor</th><th>Termina em</th></tr></thead>
-        <tbody id="co_tabelaParcelas"></tbody>
-      </table>
-      </div>
+<div class="section three-col">
+  <div class="card">
+    <div class="app-header-row" style="margin-bottom:10px;">
+      <h2 style="margin:0;">Parcelas ativas</h2>
+      <input type="text" id="co_buscaParcelas" class="search-input" style="max-width:150px; flex:none;" placeholder="Buscar parcela...">
     </div>
-    <div>
-      <h2 style="font-size:0.95rem;">Projeção de liberação de orçamento (próximos 3 meses)</h2>
-      <div id="co_projecaoParcelas"></div>
-      <div class="small-note">Valor que deixa de ser cobrado porque a parcela termina.</div>
+    <div class="table-scroll">
+    <table>
+      <thead><tr><th>Descrição</th><th>Categoria</th><th>Parcela</th><th>Valor</th><th>Termina em</th></tr></thead>
+      <tbody id="co_tabelaParcelas"></tbody>
+    </table>
     </div>
   </div>
-</div>
-
-<div class="section card">
-  <h2>Assinaturas e gastos fixos recorrentes</h2>
-  <table>
-    <thead><tr><th>Descrição</th><th>Categoria</th><th>Tipo</th><th>Meses presentes</th><th>Valor médio</th><th>Faixa</th></tr></thead>
-    <tbody id="co_tabelaRecorrentes"></tbody>
-  </table>
+  <div class="card">
+    <h2 style="font-size:0.95rem;">Projeção de liberação de orçamento (próximos 3 meses)</h2>
+    <div id="co_projecaoParcelas"></div>
+    <div class="small-note">Valor que deixa de ser cobrado porque a parcela termina.</div>
+  </div>
+  <div class="card">
+    <h2>Assinaturas e gastos fixos recorrentes</h2>
+    <div class="table-scroll">
+    <table>
+      <thead><tr><th>Descrição</th><th>Categoria</th><th>Tipo</th><th>Meses presentes</th><th>Valor médio</th><th>Faixa</th></tr></thead>
+      <tbody id="co_tabelaRecorrentes"></tbody>
+    </table>
+    </div>
+  </div>
 </div>
 
 <div class="section card">
