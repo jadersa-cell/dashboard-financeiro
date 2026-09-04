@@ -443,7 +443,7 @@
     </div>
     <div class="table-scroll">
     <table>
-      <thead><tr><th>Descrição</th><th>Categoria</th><th>Parcela</th><th>Valor</th><th>Termina em</th></tr></thead>
+      <thead><tr><th>Descrição</th><th>Categoria</th><th>Parcela</th><th>Valor</th><th>Total restante</th><th>Termina em</th></tr></thead>
       <tbody id="tabelaParcelas"></tbody>
     </table>
     </div>
@@ -586,7 +586,7 @@
     </div>
     <div class="table-scroll">
     <table>
-      <thead><tr><th>Descrição</th><th>Categoria</th><th>Parcela</th><th>Valor</th><th>Termina em</th></tr></thead>
+      <thead><tr><th>Descrição</th><th>Categoria</th><th>Parcela</th><th>Valor</th><th>Total restante</th><th>Termina em</th></tr></thead>
       <tbody id="br_tabelaParcelas"></tbody>
     </table>
     </div>
@@ -735,7 +735,7 @@
     </div>
     <div class="table-scroll">
     <table>
-      <thead><tr><th>Descrição</th><th>Categoria</th><th>Parcela</th><th>Valor</th><th>Termina em</th></tr></thead>
+      <thead><tr><th>Descrição</th><th>Categoria</th><th>Parcela</th><th>Valor</th><th>Total restante</th><th>Termina em</th></tr></thead>
       <tbody id="co_tabelaParcelas"></tbody>
     </table>
     </div>
@@ -2016,22 +2016,26 @@ function renderProjecaoParcelas(projDiv, projecao, temParcelas) {
 }
 
 // ===== Consolidação de parcelas ativas por estabelecimento (PARC.FÁCIL, TEMU, etc.) =====
+function parcRestantes(p) {
+  return p.parcelas_restantes != null ? p.parcelas_restantes : Math.max((p.parcela_total || 0) - (p.parcela_atual || 0), 0);
+}
 function agruparParcelas(lista) {
   const grupos = {};
   lista.forEach(p => { const k = p.merchant_key || p.descricao; (grupos[k] = grupos[k] || []).push(p); });
   return Object.values(grupos).map(itens => {
     itens.sort((a, b) => (a.parcela_atual || 0) - (b.parcela_atual || 0));
     const valorMensal = itens.reduce((s, p) => s + p.valor_parcela, 0);
+    const restanteTotal = itens.reduce((s, p) => s + p.valor_parcela * parcRestantes(p), 0);
     let fim = itens[0];
     itens.forEach(p => { if ((p.ano_fim * 12 + p.mes_fim) > (fim.ano_fim * 12 + fim.mes_fim)) fim = p; });
     const nome = (itens[0].descricao || '').replace(/\s*\d+\/\d+\s*$/, '').trim() || itens[0].descricao;
-    return { nome, categoria: itens[0].categoria, valorMensal, count: itens.length, itens, mes_fim: fim.mes_fim, ano_fim: fim.ano_fim };
+    return { nome, categoria: itens[0].categoria, valorMensal, restanteTotal, count: itens.length, itens, mes_fim: fim.mes_fim, ano_fim: fim.ano_fim };
   }).sort((a, b) => b.valorMensal - a.valorMensal);
 }
 function montarDetalheParcelasGrupo(g) {
-  let html = '<table style="width:100%; font-size:0.82rem;"><thead><tr><th>Descrição</th><th>Parcela</th><th>Valor</th><th>Termina em</th></tr></thead><tbody>';
+  let html = '<table style="width:100%; font-size:0.82rem;"><thead><tr><th>Descrição</th><th>Parcela</th><th>Valor</th><th>Total restante</th><th>Termina em</th></tr></thead><tbody>';
   g.itens.forEach(p => {
-    html += `<tr><td>${p.descricao}</td><td><span class="badge badge-parcela">${p.parcela_atual}/${p.parcela_total}</span></td><td>${fmtBRL(p.valor_parcela)}</td><td>${MONTH_NAMES_FULL[p.mes_fim]}/${p.ano_fim}</td></tr>`;
+    html += `<tr><td>${p.descricao}</td><td><span class="badge badge-parcela">${p.parcela_atual}/${p.parcela_total}</span></td><td>${fmtBRL(p.valor_parcela)}</td><td>${fmtBRL(p.valor_parcela * parcRestantes(p))}</td><td>${MONTH_NAMES_FULL[p.mes_fim]}/${p.ano_fim}</td></tr>`;
   });
   html += '</tbody></table>';
   return html;
@@ -2053,11 +2057,11 @@ function renderParcelasTabela(tbody, parcelasFiltradas) {
       const tr = document.createElement('tr');
       tr.className = 'parc-row expandable';
       tr.style.cursor = 'pointer';
-      tr.innerHTML = `<td><span class="fluxo-chevron">▸</span> ${g.nome}</td><td>${g.categoria}</td><td><span class="badge badge-parcela">${g.count} parcelamentos</span></td><td>${fmtBRL(g.valorMensal)} <span class="fluxo-qtd">/mês</span></td><td>${MONTH_NAMES_FULL[g.mes_fim]}/${g.ano_fim}</td>`;
+      tr.innerHTML = `<td><span class="fluxo-chevron">▸</span> ${g.nome}</td><td>${g.categoria}</td><td><span class="badge badge-parcela">${g.count} parcelamentos</span></td><td>${fmtBRL(g.valorMensal)} <span class="fluxo-qtd">/mês</span></td><td>${fmtBRL(g.restanteTotal)}</td><td>${MONTH_NAMES_FULL[g.mes_fim]}/${g.ano_fim}</td>`;
       const det = document.createElement('tr');
       det.className = 'parc-detail';
       det.style.display = 'none';
-      det.innerHTML = `<td colspan="5" style="background:var(--input-bg);">${montarDetalheParcelasGrupo(g)}</td>`;
+      det.innerHTML = `<td colspan="6" style="background:var(--input-bg);">${montarDetalheParcelasGrupo(g)}</td>`;
       tr.addEventListener('click', () => {
         const aberto = det.style.display !== 'none';
         det.style.display = aberto ? 'none' : 'table-row';
@@ -2067,11 +2071,11 @@ function renderParcelasTabela(tbody, parcelasFiltradas) {
     } else {
       const p = g.itens[0];
       const tr = document.createElement('tr');
-      tr.innerHTML = `<td>${p.descricao}</td><td>${p.categoria}</td><td><span class="badge badge-parcela">${p.parcela_atual}/${p.parcela_total}</span></td><td>${fmtBRL(p.valor_parcela)}</td><td>${MONTH_NAMES_FULL[p.mes_fim]}/${p.ano_fim}</td>`;
+      tr.innerHTML = `<td>${p.descricao}</td><td>${p.categoria}</td><td><span class="badge badge-parcela">${p.parcela_atual}/${p.parcela_total}</span></td><td>${fmtBRL(p.valor_parcela)}</td><td>${fmtBRL(p.valor_parcela * parcRestantes(p))}</td><td>${MONTH_NAMES_FULL[p.mes_fim]}/${p.ano_fim}</td>`;
       tbody.appendChild(tr);
     }
   });
-  if (!grupos.length) tbody.innerHTML = '<tr><td colspan="5" class="small-note">Nenhuma parcela ativa neste filtro.</td></tr>';
+  if (!grupos.length) tbody.innerHTML = '<tr><td colspan="6" class="small-note">Nenhuma parcela ativa neste filtro.</td></tr>';
 }
 
 // Ranking dos 10 maiores gastos do mês/período selecionado (compartilhado entre as 3 visões)
